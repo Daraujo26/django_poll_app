@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Remove Poll{% endblock %}
+
+{% block header %}Remove Poll{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th scope="col">Polls</th>
+            <th scope="col">Reponses</th>
+            <th scope="col">Date Published</th>
+        </tr>
+        {% for poll in polls %} 
+        <tr class="rows-remove">
+            <td><a href="{% url 'remove_poll' poll.id %}">{{ poll.question }}</a></td>
+            <td><a href="{% url 'remove_poll' poll.id %}">{{ poll.num_responses }}</a></td>
+            <td><a href="{% url 'remove_poll' poll.id %}">{{ poll.send_date }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{% block search%}
+<form action="{% url 'search_results' %}" method="get">
+    <input type="text" name="query" placeholder="Search poll...">
+</form>
+{% endblock %}
+

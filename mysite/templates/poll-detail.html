@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block header %}Replies{% endblock %}
+
+{% block content %}
+    <h2 id="reply_header">{{ poll.question_text }}</h2>
+    <h2 id="reply_subheader">{{ poll.send_date }}</h2>
+    <h2 id="reply_header2">Replies:</h2>
+    <div class="chat">
+        {% for response in responses %}
+        <div class="response-container">
+            <span class="main-reply-class">{{ response.response_text }}</span>
+            <span class="reply-date"> - {{ response.send_date }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="reply-form-container">
+        <form id="replyForm" action="{% url 'add_reply' poll_id=poll.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Reply</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('replyForm').onsubmit = function(e) {
+            e.preventDefault();  // Prevent the default form submission
+        
+            var formData = new FormData(this);
+            var url = this.action;
+        
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    if (data.success) {
+                        // Append the new reply to the chat using the correct structure
+                        const chatDiv = document.querySelector('.chat');
+                        const responseContainer = document.createElement('div');
+                        responseContainer.className = 'response-container';
+                        
+                        const mainReplyClassSpan = document.createElement('span');
+                        mainReplyClassSpan.className = 'main-reply-class';
+                        mainReplyClassSpan.textContent = data.response_text;
+                        
+                        const replyDateSpan = document.createElement('span');
+                        replyDateSpan.className = 'reply-date';
+                        replyDateSpan.textContent = " - " + data.pub_date; 
+                        
+                        responseContainer.appendChild(mainReplyClassSpan);
+                        responseContainer.appendChild(replyDateSpan);
+                        
+                        chatDiv.insertBefore(responseContainer, chatDiv.firstChild);
+            
+                        // Clear the form input after submission
+                        document.getElementById('replyForm').reset();
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+        </script>
+        
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}My Site{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body id="main-body">
+    <header>
+        <h1 class="header">{% block header %}{% endblock %}</h1>
+        <div class="topnav" id="myTopnav">
+            <a href="/" class="active">Polls</a>
+            <a href="/create-poll">Create Poll</a>
+            <a href="/remove-poll">Remove Poll</a>
+            {% block search %}{% endblock %}
+        </div>
+        {% block content %}{% endblock %}
+    </header>
+
+    <footer>
+        
+    </footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}David's Polling App{% endblock %}
+
+{% block header %}Basic Django Polling App{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th scope="col">Polls</th>
+            <th scope="col">Reponses</th>
+            <th scope="col">Date Published</th>
+        </tr>
+        {% if questions %}
+        {% for question in questions %} 
+        <tr class="rows">
+            <td><a href="{% url 'poll_detail' question.id %}">{{ question.question }}</a></td>
+            <td>{{ question.num_responses }}</td>
+            <td>{{ question.send_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>No questions found.</p>
+    {% endif %}
+    </table>
+{% endblock %}
+
+{% block search%}
+<form action="{% url 'search_results' %}" method="get">
+    <input type="text" name="query" placeholder="Search poll...">
+</form>
+{% endblock %}
+
